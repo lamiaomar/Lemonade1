@@ -1,4 +1,18 @@
-
+/*
+ * Copyright (C) 2021 The Android Open Source Project.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.example.lemonade
 
 import androidx.appcompat.app.AppCompatActivity
@@ -56,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         }
         lemonImage!!.setOnLongClickListener {
             showSnackbar()
+
         }
     }
 
@@ -76,46 +91,49 @@ class MainActivity : AppCompatActivity() {
      * This method determines the state and proceeds with the correct action.
      */
     private fun clickLemonImage() {
-      if (lemonadeState=="select"){
-          lemonadeState= SQUEEZE
-          squeezeCount=0
-          lemonSize=1
-          lemonTree.pick(squeezeCount)
-      }else if(lemonadeState=="squeeze"){
-          ++squeezeCount
-          --lemonSize
-          if (lemonSize==0) lemonadeState=DRINK
-      }else if(lemonadeState=="drink"){
-          lemonadeState=RESTART
-          lemonSize=-1
-      }else if(lemonadeState=="restart"){ lemonadeState=SELECT }
+        when(lemonadeState){
+            SELECT-> {lemonadeState=SQUEEZE
+                lemonSize=lemonTree.pick()
+                squeezeCount=0}
 
-      setViewElements()
-      }
-
+            SQUEEZE->{squeezeCount+=1
+                lemonSize-=1
+                if(lemonSize==0) lemonadeState=DRINK}
+            DRINK->{ lemonadeState=RESTART
+                lemonSize=-1}
+            RESTART->{lemonadeState=SELECT}
+        }
+        setViewElements()
+    }
 
     /**
      * Set up the view elements according to the state.
      */
-    fun setViewElements() {
+    private fun setViewElements() {
         val textAction: TextView = findViewById(R.id.text_action)
 
-        if(lemonadeState==SELECT){
-            lemonImage?.setImageResource(R.drawable.lemon_tree)
-            textAction.getResources().getString(R.string.lemon_select) }
-        else if(lemonadeState==SQUEEZE){
-            lemonImage?.setImageResource(R.drawable.lemon_squeeze)
-            textAction.getResources().getString(R.string.lemon_squeeze) }
-        else if(lemonadeState==DRINK){
-            lemonImage?.setImageResource(R.drawable.lemon_drink)
-            textAction.getResources().getString(R.string.lemon_drink)}
-        else if(lemonadeState==RESTART){
-            lemonImage?.setImageResource(R.drawable.lemon_restart)
-            textAction.getResources().getString(R.string.lemon_empty_glass)}
-
+        when(lemonadeState){
+            SELECT->{
+                lemonImage?.setImageResource(R.drawable.lemon_tree)
+                textAction.setText(R.string.lemon_select)
+            }
+            SQUEEZE->{lemonImage?.setImageResource(R.drawable.lemon_squeeze)
+                textAction.setText(R.string.lemon_squeeze)
+            }
+            DRINK->{lemonImage?.setImageResource(R.drawable.lemon_drink)
+                textAction.setText(R.string.lemon_drink)
+            }
+            RESTART->{lemonImage?.setImageResource(R.drawable.lemon_restart)
+                textAction.setText(R.string.lemon_empty_glass)
+            }
+        }
     }
 
-
+    /**
+     * === DO NOT ALTER THIS METHOD ===
+     *
+     * Long clicking the lemon image will show how many times the lemon has been squeezed.
+     */
     private fun showSnackbar(): Boolean {
         if (lemonadeState != SQUEEZE) {
             return false
@@ -130,9 +148,12 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-
+/**
+ * A Lemon tree class with a method to "pick" a lemon. The "size" of the lemon is randomized
+ * and determines how many times a lemon needs to be squeezed before you get lemonade.
+ */
 class LemonTree {
-    fun pick(squeezeCount: Int): Int {
+    fun pick(): Int {
         return (2..4).random()
     }
 }
