@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
           lemonSize=-1
       }else if(lemonadeState=="restart"){ lemonadeState=SELECT }
 
-    //      .setViewElements()
+      setViewElements()
       }
 
 
