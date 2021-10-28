@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun clickLemonImage() {
       if (lemonadeState=="select"){
-          lemonadeState== SQUEEZE
+          lemonadeState= SQUEEZE
           squeezeCount=0
           lemonSize=1
           lemonTree.pick(squeezeCount)
@@ -102,16 +102,16 @@ class MainActivity : AppCompatActivity() {
 
         if(lemonadeState==SELECT){
             lemonImage?.setImageResource(R.drawable.lemon_tree)
-            textAction?.setText("Click to select a lemon!") }
+            textAction.getResources().getString(R.string.lemon_select) }
         else if(lemonadeState==SQUEEZE){
             lemonImage?.setImageResource(R.drawable.lemon_squeeze)
-            textAction?.setText("Click to juice the lemon!") }
+            textAction.getResources().getString(R.string.lemon_squeeze) }
         else if(lemonadeState==DRINK){
             lemonImage?.setImageResource(R.drawable.lemon_drink)
-            textAction?.setText("Click to drink your lemonade!")}
+            textAction.getResources().getString(R.string.lemon_drink)}
         else if(lemonadeState==RESTART){
             lemonImage?.setImageResource(R.drawable.lemon_restart)
-            textAction?.setText("Click to start again!")}
+            textAction.getResources().getString(R.string.lemon_empty_glass)}
 
     }
 
